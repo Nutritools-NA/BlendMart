@@ -36,10 +36,11 @@
   <div class="wrap">
     <img src="icon-512.png" alt="ระบบบันทึกการผลิต">
     <h1>ระบบบันทึกการผลิต</h1>
-    <p id="statusText">กำลังเข้าสู่ระบบใน <span id="countdown">60</span> วินาที...</p>
-    <a class="enter-btn" href="https://script.google.com/macros/s/AKfycbzEYEUzYYqq7BLdZ2nm7n_EiboQUXM6jpk9zvXOjIVqJ0f6uHX6AmakvJUfPEvr9G-T/exec" id="enterBtn">เข้าใช้งานตอนนี้</a>
+    <p id="statusText">กำลังเปิดระบบในแท็บใหม่ใน <span id="countdown">3</span> วินาที...</p>
+    <a class="enter-btn" href="https://script.google.com/macros/s/AKfycbzEYEUzYYqq7BLdZ2nm7n_EiboQUXM6jpk9zvXOjIVqJ0f6uHX6AmakvJUfPEvr9G-T/exec" target="_blank" rel="noopener" id="enterBtn">เข้าใช้งานตอนนี้</a>
     <p class="hint">
-      
+      💡 หากต้องการเพิ่มไอคอนนี้ไปยังหน้าจอโฮม ให้กดเมนู ⋮ ของเบราว์เซอร์ตอนนี้ (ก่อนที่ระบบจะเปิดแท็บใหม่อัตโนมัติ) แล้วเลือก "เพิ่มไปยังหน้าจอโฮม" หรือ "ติดตั้งแอป"<br><br>
+      ระบบจะเปิดในแท็บ Chrome แยกต่างหาก (ไม่ใช่หน้าต่างเดียวกับไอคอนนี้) เพื่อให้การกดเปลี่ยนหน้าภายในระบบทำงานได้เสถียรที่สุด
     </p>
   </div>
 
@@ -48,13 +49,22 @@
       navigator.serviceWorker.register('sw.js').catch(function() {});
     }
 
-    var seconds = 60;
+    var EXEC_URL = "https://script.google.com/macros/s/AKfycbzEYEUzYYqq7BLdZ2nm7n_EiboQUXM6jpk9zvXOjIVqJ0f6uHX6AmakvJUfPEvr9G-T/exec";
+
+    function openApp() {
+      // เปิดเป็นแท็บ/task ใหม่แยกออกไป แทนการ navigate หน้าต่างเดิม
+      // เพื่อไม่ให้ติดอยู่ในกล่อง "นอกขอบเขตแอป" ที่ทำให้การนำทางภายในไม่เสถียร
+      window.open(EXEC_URL, "_blank");
+    }
+
+    var seconds = 3;
     var countdownEl = document.getElementById('countdown');
     var timer = setInterval(function() {
       seconds--;
       if (seconds <= 0) {
         clearInterval(timer);
-        window.location.href = "https://script.google.com/macros/s/AKfycbzEYEUzYYqq7BLdZ2nm7n_EiboQUXM6jpk9zvXOjIVqJ0f6uHX6AmakvJUfPEvr9G-T/exec";
+        document.getElementById('statusText').textContent = 'เปิดแท็บใหม่แล้ว หากไม่เห็นให้กดปุ่มด้านล่าง';
+        openApp();
       } else {
         countdownEl.textContent = seconds;
       }
